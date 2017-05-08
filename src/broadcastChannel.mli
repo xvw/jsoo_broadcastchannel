@@ -21,4 +21,15 @@
  * SOFTWARE.
  *)
 
- val is_avalaible : bool
+
+class type t = object 
+  inherit Dom_html.eventTarget
+  method name  : Js.js_string Js.readonly_prop
+  method close : unit -> unit Js.meth
+end
+
+
+
+val create: string -> t
+val close: t -> unit
+val name: t-> string

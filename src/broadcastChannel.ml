@@ -21,4 +21,15 @@
  * SOFTWARE.
  *)
 
- let constr = Js.Unsafe.global##.__BroadChannel
+
+class type t = object 
+  inherit Dom_html.eventTarget
+  method name  : Js.js_string Js.readonly_prop
+  method close : unit -> unit Js.meth
+end
+
+
+let constr = Js.Unsafe.global##._BroadcastChannel
+let create name = new%js constr (Js.string name)
+let close obj = ignore (obj ## close())
+let name obj = Js.to_string (obj##.name)
