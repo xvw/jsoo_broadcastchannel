@@ -22,11 +22,13 @@
  *)
 
 
-class type t = object 
+class type broadcaster = object 
   inherit Dom_html.eventTarget
-  method name  : Js.js_string Js.readonly_prop
+  method name  : (Js.js_string Js.t) Js.readonly_prop
   method close : unit -> unit Js.meth
 end
+
+type t = broadcaster Js.t
 
 
 let constr = Js.Unsafe.global##._BroadcastChannel
