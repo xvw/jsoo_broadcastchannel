@@ -28,8 +28,9 @@ class type broadcaster = object
   method close : unit -> unit Js.meth
 end
 
-type t 
+type t = broadcaster Js.t
 
+val is_supported : unit -> bool
 val create: string -> t
 val close: t -> unit
 val name: t-> string

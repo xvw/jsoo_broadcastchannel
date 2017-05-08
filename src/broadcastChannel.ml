@@ -32,6 +32,7 @@ type t = broadcaster Js.t
 
 
 let constr = Js.Unsafe.global##._BroadcastChannel
+let is_supported () = Js.Optdef.test constr
 let create name = new%js constr (Js.string name)
 let close obj = ignore (obj ## close())
 let name obj = Js.to_string (obj##.name)
