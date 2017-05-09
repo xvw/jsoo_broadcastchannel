@@ -22,6 +22,11 @@
  *)
 
 
+class type ['a] messageEvent =
+  object 
+    inherit ['a] EventSource.messageEvent
+  end
+
 let constr = Js.Unsafe.global##._BroadcastChannel
 let is_supported () = Js.Optdef.test constr
 
@@ -36,12 +41,16 @@ sig
 
   include REQUIRED
 
+  val message :  message messageEvent Js.t Dom.Event.typ
+
   class type broadcaster = 
-  object 
+  object ('self)
     inherit Dom_html.eventTarget
     method name  : (Js.js_string Js.t) Js.readonly_prop
     method close : unit -> unit Js.meth
     method postMessage :  message -> unit Js.meth
+    method onmessage: 
+      ('self Js.t, 'b messageEvent Js.t) Dom_html.event_listener Js.writeonly_prop
   end
 
   type t = broadcaster Js.t
@@ -50,6 +59,8 @@ sig
   val close: t -> unit
   val name: t-> string
   val post: t -> message -> unit
+  val onmessage: t -> ('a -> bool Js.t) -> unit
+  
 
 end
 
@@ -60,12 +71,15 @@ struct
   type message = B.message
 
   class type broadcaster = 
-  object 
+  object ('self)
     inherit Dom_html.eventTarget
     method name  : (Js.js_string Js.t) Js.readonly_prop
     method close : unit -> unit Js.meth
-    method postMessage :  message-> unit Js.meth
+    method postMessage :  message -> unit Js.meth
+    method onmessage: 
+      ('self Js.t, 'b messageEvent Js.t) Dom_html.event_listener Js.writeonly_prop
   end
+
 
   type t = broadcaster Js.t
 
@@ -74,6 +88,10 @@ struct
   let name obj = Js.to_string (obj##.name)
   let post obj message = ignore (obj##postMessage(message))
 
+  let message = Dom.Event.make "message"
+
+  let onmessage obj callback = ()
+    (**obj##.onmessage := (Dom_html.handler callback) *)
 end
 
 

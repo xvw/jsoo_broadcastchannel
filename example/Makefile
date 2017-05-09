@@ -2,12 +2,11 @@ OCAML    = ocamlfind ocamlc -g -package js_of_ocaml -package js_of_ocaml.ppx
 DEP      = -package jsoo_broadcastchannel
 JSOCAML  = js_of_ocaml --pretty --sourcemap +weak.js +toplevel.js
 
-.PHONY: example.ml
+.PHONY: example.ml answer.ml
 
 # Specific rule
-all: example.js
-	rm -rf *.byte
-	rm -rf *.cm*
+all: example.js answer.js clean
+
 
 
 # Generic rules
@@ -17,3 +16,7 @@ all: example.js
 
 %.js: %.byte
 	$(JSOCAML) -o $(@) $(<)
+
+clean:
+	rm -rf *.byte
+	rm -rf *.cm*

@@ -35,6 +35,12 @@
 
 (** {1 Common API} *)
 
+(** The type of a messageEvent (could be extended) *)
+class type ['a] messageEvent =
+  object 
+    inherit ['a] EventSource.messageEvent
+  end
+
 (** Checks if the BroadcastChannel is available for the client *)
 val is_supported : unit -> bool
 
@@ -55,17 +61,22 @@ sig
 
   include REQUIRED
 
+  val message :  message messageEvent Js.t Dom.Event.typ
+
   (** An internal wrapper for an instance of BroadcastChannel *)
   class type broadcaster = 
-  object 
+  object ('self)
     inherit Dom_html.eventTarget
     method name  : (Js.js_string Js.t) Js.readonly_prop
     method close : unit -> unit Js.meth
     method postMessage :  message -> unit Js.meth
+    method onmessage: 
+      ('self Js.t, 'b messageEvent Js.t) Dom_html.event_listener Js.writeonly_prop
   end
 
   (** A Client's side type for a broadcaster *)
   type t = broadcaster Js.t
+
 
   (** Creates a bus with a name *)
   val create: string -> t
@@ -78,6 +89,8 @@ sig
 
   (** Send message to the bus  *)
   val post: t -> message -> unit
+
+  val onmessage: t -> ('a -> bool Js.t) -> unit
 
 end
 
