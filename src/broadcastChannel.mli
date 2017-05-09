@@ -29,6 +29,8 @@
     broadcasted via a message event fired at all BroadcastChannel objects listening 
     to the channel.
 
+    You can have more details here : https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel
+
     The module provides a functor's way to manage typed bus.
  *)
 
