@@ -5,7 +5,7 @@ JSOCAML  = js_of_ocaml --pretty --sourcemap +weak.js +toplevel.js
 .PHONY: example.ml answer.ml
 
 # Specific rule
-all: example.js answer.js clean
+all: send.js receive.js clean
 
 
 
