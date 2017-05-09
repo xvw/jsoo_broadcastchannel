@@ -51,7 +51,6 @@ sig
   val name: t-> string
   val post: t -> message -> unit
 
-
 end
 
 module Make (B : REQUIRED) : 
