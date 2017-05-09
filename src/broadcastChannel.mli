@@ -63,12 +63,6 @@ sig
 
   include REQUIRED
 
-  (** Internal events for a typed bus  *)
-  module Event : 
-  sig 
-    val message :  message messageEvent Js.t Dom.Event.typ
-  end
-
   (** An internal wrapper for an instance of BroadcastChannel *)
   class type broadcaster = 
   object ('self)
@@ -82,6 +76,19 @@ sig
 
   (** A Client's side type for a broadcaster *)
   type t = broadcaster Js.t
+
+  (** Internal events for a typed bus  *)
+  module Event : 
+  sig 
+    (** An [Event type] to be used with [addEventListener] *)
+    val message :  message messageEvent Js.t Dom.Event.typ
+
+    (** An [Event type] to be used with [Lwt_js_events] *)
+    val lwt_js_message: 
+      ?use_capture:bool
+      -> t 
+      -> message messageEvent Js.t Lwt.t
+  end
 
 
   (** Creates a bus linked to a name *)

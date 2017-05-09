@@ -40,13 +40,7 @@ module type BROADCASTER =
 sig
 
   include REQUIRED
-
-  module Event : 
-  sig 
-    val message :  message messageEvent Js.t Dom.Event.typ
-  end
   
-
   class type broadcaster = 
   object ('self)
     inherit Dom_html.eventTarget
@@ -58,6 +52,15 @@ sig
   end
 
   type t = broadcaster Js.t
+
+  module Event : 
+  sig 
+    val message :  (message messageEvent) Js.t Dom.Event.typ
+    val lwt_js_message: 
+      ?use_capture:bool
+      -> t 
+      -> (message messageEvent) Js.t Lwt.t
+  end
 
   val create: string -> t
   val close: t -> unit
@@ -84,6 +87,18 @@ struct
   module Event = 
   struct 
     let message = Dom.Event.make "message"
+    let lwt_js_message ?(use_capture = false) target = 
+      let el = ref Js.null in
+      let t, w = Lwt.task () in
+      let cancel () = Js.Opt.iter !el Dom.removeEventListener in
+      Lwt.on_cancel t cancel;
+      el := Js.some
+        (Dom.addEventListener
+          target message
+          (Dom.handler (fun ev -> cancel (); Lwt.wakeup w ev; Js.bool true))
+          (Js.bool use_capture)
+        );
+      t
   end
   
 

@@ -8,13 +8,24 @@ module StringBus = BroadcastChannel.Make(
 let bus_test = StringBus.create "test"
 
 let _ = 
+  Lwt_js_events.async_loop
+    StringBus.Event.lwt_js_message
+    bus_test
+    (fun ev _ ->
+      let _ = io "GET" in
+      let _ = io ev##.data in
+      Lwt.return_unit
+    )
+
+(*
+let _ = 
   let f = (fun e -> io e##.data; Js._true) in 
   StringBus.addEventListener
     bus_test
     StringBus.Event.message
     (Dom.handler f)
     Js._true
-
+*)
 
 (*
 let _ = StringBus.onmessage 
