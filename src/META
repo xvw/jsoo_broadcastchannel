@@ -1,10 +1,10 @@
 # OASIS_START
-# DO NOT EDIT (digest: 19ad732eef0af7634f3f0b8648abfdfc)
+# DO NOT EDIT (digest: 461b5ca6ae41a3cba90cfc90b93e3890)
 version = "0.1"
 description = "A Js_of_OCaml extension to use BroadcastChannel"
 requires = "js_of_ocaml js_of_ocaml.ppx"
-archive(byte) = "jsoo_router.cma"
-archive(byte, plugin) = "jsoo_router.cma"
-exists_if = "jsoo_router.cma"
+archive(byte) = "jsoo_broadcastchannel.cma"
+archive(byte, plugin) = "jsoo_broadcastchannel.cma"
+exists_if = "jsoo_broadcastchannel.cma"
 # OASIS_STOP
 

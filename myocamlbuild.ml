@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 2938370aa136f0322276a4c63b44d752) *)
+(* DO NOT EDIT (digest: bb6ffeff01115b62fac808ddf30d1a19) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -885,21 +885,36 @@ end
 open Ocamlbuild_plugin;;
 let package_default =
   {
-     MyOCamlbuildBase.lib_ocaml = [("jsoo_router", ["src"], [])];
+     MyOCamlbuildBase.lib_ocaml = [("jsoo_broadcastchannel", ["src"], [])];
      lib_c = [];
      flags =
        [
-          (["oasis_library_jsoo_router_byte"; "ocaml"; "link"; "byte"],
+          ([
+              "oasis_library_jsoo_broadcastchannel_byte";
+              "ocaml";
+              "link";
+              "byte"
+           ],
             [
                (OASISExpr.EBool true,
                  S [A "-g"; A "-w"; A "+a-4-40..42-44-45-48"])
             ]);
-          (["oasis_library_jsoo_router_byte"; "ocaml"; "ocamldep"; "byte"],
+          ([
+              "oasis_library_jsoo_broadcastchannel_byte";
+              "ocaml";
+              "ocamldep";
+              "byte"
+           ],
             [
                (OASISExpr.EBool true,
                  S [A "-g"; A "-w"; A "+a-4-40..42-44-45-48"])
             ]);
-          (["oasis_library_jsoo_router_byte"; "ocaml"; "compile"; "byte"],
+          ([
+              "oasis_library_jsoo_broadcastchannel_byte";
+              "ocaml";
+              "compile";
+              "byte"
+           ],
             [
                (OASISExpr.EBool true,
                  S [A "-g"; A "-w"; A "+a-4-40..42-44-45-48"])
@@ -913,6 +928,6 @@ let conf = {MyOCamlbuildFindlib.no_automatic_syntax = false}
 
 let dispatch_default = MyOCamlbuildBase.dispatch_default conf package_default;;
 
-# 917 "myocamlbuild.ml"
+# 932 "myocamlbuild.ml"
 (* OASIS_STOP *)
 Ocamlbuild_plugin.dispatch dispatch_default;;

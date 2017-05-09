@@ -11,7 +11,7 @@ BuildTools: ocamlbuild, ocamldoc
 Plugins: META (0.4), DevFiles (0.4)
 AlphaFeatures: ocamlbuild_more_args
 
-Library jsoo_router
+Library jsoo_broadcastchannel
   Path:           src
   FindlibName:    jsoo_broadcastchannel
   Install:        true
