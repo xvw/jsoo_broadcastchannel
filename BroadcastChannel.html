@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="BroadcastChannel" rel="Chapter" href="BroadcastChannel.html"><link title="Common API" rel="Section" href="#1_CommonAPI">
+<link title="Functors and interfaces" rel="Section" href="#1_Functorsandinterfaces">
+<title>BroadcastChannel</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_BroadcastChannel.html">BroadcastChannel</a></h1>
+
+<pre><span class="keyword">module</span> BroadcastChannel: <code class="code"><span class="keyword">sig</span></code> <a href="BroadcastChannel.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+<code class="code">jsoo_broadcastchannel</code> provides a wrapper around the BroadcastChannel API 
+    in JavaScript. 
+    The BroadcastChannel interface represents a named channel that any browsing context 
+    of a given origin can subscribe to. It allows communication between different documents 
+    (in different windows, tabs, frames or iframes) of the same origin. Messages are 
+    broadcasted via a message event fired at all BroadcastChannel objects listening 
+    to the channel.
+<p>
+
+    You can have more details here : https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel
+<p>
+
+    The module provides a functor's way to manage typed bus.<br>
+</div>
+<hr width="100%">
+<br>
+<h1 id="1_CommonAPI">Common API</h1><br>
+
+<pre><span id="TYPEmessageEvent"><span class="keyword">class type</span> <code class="type">['a]</code> <a href="BroadcastChannel.messageEvent-c.html">messageEvent</a></span> = <code class="code"><span class="keyword">object</span></code> <a href="BroadcastChannel.messageEvent-c.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+The type of a messageEvent (could be extended)
+</div>
+
+<pre><span id="VALis_supported"><span class="keyword">val</span> is_supported</span> : <code class="type">unit -> bool</code></pre><div class="info ">
+Checks if the BroadcastChannel is available for the client<br>
+</div>
+<br>
+<h1 id="1_Functorsandinterfaces">Functors and interfaces</h1><br>
+
+<pre><span class="keyword">module type</span> <a href="BroadcastChannel.REQUIRED.html">REQUIRED</a> = <code class="code"><span class="keyword">sig</span></code> <a href="BroadcastChannel.REQUIRED.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+A Required interfaces to built a BroadCaster
+</div>
+
+<pre><span class="keyword">module type</span> <a href="BroadcastChannel.BROADCASTER.html">BROADCASTER</a> = <code class="code"><span class="keyword">sig</span></code> <a href="BroadcastChannel.BROADCASTER.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+The interface of a broadcaster
+</div>
+
+<pre><span class="keyword">module</span> <a href="BroadcastChannel.Make.html">Make</a>: <div class="sig_block"><code class="code"><span class="keyword">functor</span>&nbsp;(</code><code class="code"><span class="constructor">B</span></code><code class="code">&nbsp;:&nbsp;</code><code class="type"><a href="BroadcastChannel.REQUIRED.html">REQUIRED</a></code><code class="code">)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;</code><code class="type"><a href="BroadcastChannel.BROADCASTER.html">BROADCASTER</a></code><code class="type">  
+  with type message = B.message</code></div></pre><div class="info">
+Functor to built a typed broadcaster
+</div>
+</body></html>
