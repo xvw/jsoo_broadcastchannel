@@ -35,3 +35,39 @@
 
 (** Checks if the BroadcastChannel is available for the client *)
 val is_supported : unit -> bool
+
+(** {1 Functors and interfaces} *)
+
+(** A Required interfaces to built a BroadCaster *)
+module type REQUIRED = 
+sig 
+  type message
+end
+
+
+(** The interface of a broadcaster *)
+module type BROADCASTER = 
+sig
+
+  include REQUIRED
+
+  class type broadcaster = 
+  object 
+    inherit Dom_html.eventTarget
+    method name  : (Js.js_string Js.t) Js.readonly_prop
+    method close : unit -> unit Js.meth
+    method postMessage :  message -> unit Js.meth
+  end
+
+  type t = broadcaster Js.t
+
+  val create: string -> t
+  val close: t -> unit
+  val name: t-> string
+  val post: t -> message -> unit
+
+end
+
+(** Functor to built a typed broadcaster *)
+module Make (B : REQUIRED ) : BROADCASTER 
+  with type message = B.message

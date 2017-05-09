@@ -1,10 +1,15 @@
-(*
 let io x = Firebug.console##log x
 
-let a = BroadcastChannel.create "test"
+module StringBus = BroadcastChannel.Make(
+  struct
+    type message = Js.js_string Js.t 
+  end)
+
+
+let a = StringBus.create "test"
 
 let () = Firebug.console##log(a)
-let () = Firebug.console##log(BroadcastChannel.name a)
+let () = Firebug.console##log(StringBus.name a)
 
 
 
@@ -17,8 +22,8 @@ let _ =
     Dom_html.window 
     (fun _ _ ->
       let _ = io "test" in
-      let _ = BroadcastChannel.post a (Js.string "Hello World") in
+      let _ = StringBus.post a (Js.string "Hello World") in
       Lwt.return_unit 
     )
-*)
+
 
