@@ -71,7 +71,7 @@ sig
     method close : unit -> unit Js.meth
     method postMessage :  message -> unit Js.meth
     method onmessage: 
-      ('self Js.t, 'b messageEvent Js.t) Dom_html.event_listener Js.writeonly_prop
+      ('self Js.t, message messageEvent Js.t) Dom_html.event_listener Js.writeonly_prop
   end
 
   (** A Client's side type for a broadcaster *)
@@ -90,7 +90,7 @@ sig
   (** Send message to the bus  *)
   val post: t -> message -> unit
 
-  val onmessage: t -> ('a -> bool Js.t) -> unit
+  val onmessage: t -> (message messageEvent Js.t -> bool Js.t) -> unit
 
 end
 

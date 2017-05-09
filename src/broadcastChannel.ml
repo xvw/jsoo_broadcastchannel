@@ -50,7 +50,7 @@ sig
     method close : unit -> unit Js.meth
     method postMessage :  message -> unit Js.meth
     method onmessage: 
-      ('self Js.t, 'b messageEvent Js.t) Dom_html.event_listener Js.writeonly_prop
+      ('self Js.t, message messageEvent Js.t) Dom_html.event_listener Js.writeonly_prop
   end
 
   type t = broadcaster Js.t
@@ -59,7 +59,7 @@ sig
   val close: t -> unit
   val name: t-> string
   val post: t -> message -> unit
-  val onmessage: t -> ('a -> bool Js.t) -> unit
+  val onmessage: t -> (message messageEvent Js.t -> bool Js.t) -> unit
   
 
 end
@@ -77,7 +77,7 @@ struct
     method close : unit -> unit Js.meth
     method postMessage :  message -> unit Js.meth
     method onmessage: 
-      ('self Js.t, 'b messageEvent Js.t) Dom_html.event_listener Js.writeonly_prop
+      ('self Js.t, message messageEvent Js.t) Dom.event_listener Js.writeonly_prop
   end
 
 
@@ -90,8 +90,8 @@ struct
 
   let message = Dom.Event.make "message"
 
-  let onmessage obj callback = ()
-    (**obj##.onmessage := (Dom_html.handler callback) *)
+  let onmessage obj f =
+    obj##.onmessage := (Dom.handler f)
 end
 
 
