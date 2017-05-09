@@ -38,3 +38,4 @@ setup.log
 api.docdir
 *.js
 *config.ml
+experiences/*

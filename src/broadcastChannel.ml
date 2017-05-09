@@ -22,17 +22,60 @@
  *)
 
 
-class type broadcaster = object 
-  inherit Dom_html.eventTarget
-  method name  : (Js.js_string Js.t) Js.readonly_prop
-  method close : unit -> unit Js.meth
-end
-
-type t = broadcaster Js.t
-
-
 let constr = Js.Unsafe.global##._BroadcastChannel
 let is_supported () = Js.Optdef.test constr
-let create name = new%js constr (Js.string name)
-let close obj = ignore (obj ## close())
-let name obj = Js.to_string (obj##.name)
+
+module type REQUIRED = 
+sig 
+  type message
+end
+
+
+module type BROADCASTER = 
+sig
+
+  include REQUIRED
+
+  class type broadcaster = 
+  object 
+    inherit Dom_html.eventTarget
+    method name  : (Js.js_string Js.t) Js.readonly_prop
+    method close : unit -> unit Js.meth
+    method postMessage :  message -> unit Js.meth
+  end
+
+  type t = broadcaster Js.t
+
+  val create: string -> t
+  val close: t -> unit
+  val name: t-> string
+  val post: t -> message -> unit
+
+
+end
+
+module Make (B : REQUIRED) : 
+  BROADCASTER with type message = B.message = 
+struct 
+
+  type message = B.message
+
+  class type broadcaster = 
+  object 
+    inherit Dom_html.eventTarget
+    method name  : (Js.js_string Js.t) Js.readonly_prop
+    method close : unit -> unit Js.meth
+    method postMessage :  message-> unit Js.meth
+  end
+
+  type t = broadcaster Js.t
+
+  let create name = new%js constr (Js.string name)
+  let close obj = ignore (obj ## close())
+  let name obj = Js.to_string (obj##.name)
+  let post obj message = ignore (obj##postMessage(message))
+
+end
+
+
+

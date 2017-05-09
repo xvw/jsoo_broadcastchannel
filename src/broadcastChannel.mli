@@ -31,32 +31,7 @@
  *)
 
 
-(** {1 Types and classes} *)
-
-(** This class represent a broacasterChannel, it is a wrapper around the 
-    JavaScript implementation.
- *)
-class type broadcaster = object 
-  inherit Dom_html.eventTarget
-  method name  : (Js.js_string Js.t) Js.readonly_prop
-  method close : unit -> unit Js.meth
-end
-
-(** This type is the JavaScript part of a BroadcasterChannel. *)
-type t = broadcaster Js.t
-
-(** {1 API} *)
+(** {1 Common API} *)
 
 (** Checks if the BroadcastChannel is available for the client *)
 val is_supported : unit -> bool
-
-(** Creates  a new BroadcastChannel (with a name). This function 
-    returns a [BroadcastChannel.t].
- *)
-val create: string -> t
-
-(** Close a BroadcastChannel. *)
-val close: t -> unit
-
-(** Returns the name of a BroadcastChannel. *)
-val name: t-> string
