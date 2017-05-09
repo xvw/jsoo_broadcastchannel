@@ -16,10 +16,9 @@ module TestBus = BroadcastChannel.Make(
 
 
 let a = StringBus.create "test"
-let b = TestBus.create "test2"
 
-let () = Firebug.console##log(a)
-let () = Firebug.console##log(StringBus.name a)
+let () = io a
+let () = io (StringBus.name a)
 
 
 
@@ -31,15 +30,7 @@ let _ =
     keydown 
     Dom_html.window 
     (fun _ _ ->
-      let _ = io "test" in
-      let _ = StringBus.post a (Js.string "Hello World") in
-      let _ = TestBus.post 
-        b 
-        (object%js 
-          val x = 10 
-          val y = 12
-        end)
-      in 
+      let _ = StringBus.post a (Js.string "JKSJDLSJLKD") in
       Lwt.return_unit 
     )
 

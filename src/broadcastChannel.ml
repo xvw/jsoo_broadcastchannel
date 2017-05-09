@@ -41,7 +41,11 @@ sig
 
   include REQUIRED
 
-  val message :  message messageEvent Js.t Dom.Event.typ
+  module Event : 
+  sig 
+    val message :  message messageEvent Js.t Dom.Event.typ
+  end
+  
 
   class type broadcaster = 
   object ('self)
@@ -60,6 +64,13 @@ sig
   val name: t-> string
   val post: t -> message -> unit
   val onmessage: t -> (message messageEvent Js.t -> bool Js.t) -> unit
+
+  val addEventListener : 
+    t
+    -> message messageEvent Js.t Dom.Event.typ
+    -> (t, message messageEvent Js.t) Dom.event_listener
+    -> bool Js.t 
+    -> Dom.event_listener_id
   
 
 end
@@ -69,6 +80,12 @@ module Make (B : REQUIRED) :
 struct 
 
   type message = B.message
+
+  module Event = 
+  struct 
+    let message = Dom.Event.make "message"
+  end
+  
 
   class type broadcaster = 
   object ('self)
@@ -87,11 +104,9 @@ struct
   let close obj = ignore (obj ## close())
   let name obj = Js.to_string (obj##.name)
   let post obj message = ignore (obj##postMessage(message))
+  let onmessage obj f = obj##.onmessage := (Dom.handler f)
+  let addEventListener = Dom.addEventListener
 
-  let message = Dom.Event.make "message"
-
-  let onmessage obj f =
-    obj##.onmessage := (Dom.handler f)
 end
 
 

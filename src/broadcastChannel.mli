@@ -63,7 +63,11 @@ sig
 
   include REQUIRED
 
-  val message :  message messageEvent Js.t Dom.Event.typ
+  (** Internal events for a typed bus  *)
+  module Event : 
+  sig 
+    val message :  message messageEvent Js.t Dom.Event.typ
+  end
 
   (** An internal wrapper for an instance of BroadcastChannel *)
   class type broadcaster = 
@@ -99,6 +103,14 @@ sig
       message event is fired on this object. 
   *)
   val onmessage: t -> (message messageEvent Js.t -> bool Js.t) -> unit
+
+
+  val addEventListener : 
+    t
+    -> message messageEvent Js.t Dom.Event.typ
+    -> (t, message messageEvent Js.t) Dom.event_listener
+    -> bool Js.t 
+    -> Dom.event_listener_id
 
 end
 
