@@ -28,6 +28,8 @@
     (in different windows, tabs, frames or iframes) of the same origin. Messages are 
     broadcasted via a message event fired at all BroadcastChannel objects listening 
     to the channel.
+
+    The module provides a functor's way to manage typed bus.
  *)
 
 
@@ -41,6 +43,8 @@ val is_supported : unit -> bool
 (** A Required interfaces to built a BroadCaster *)
 module type REQUIRED = 
 sig 
+
+  (** The type of the bus *)
   type message
 end
 
@@ -51,6 +55,7 @@ sig
 
   include REQUIRED
 
+  (** An internal wrapper for an instance of BroadcastChannel *)
   class type broadcaster = 
   object 
     inherit Dom_html.eventTarget
@@ -59,11 +64,19 @@ sig
     method postMessage :  message -> unit Js.meth
   end
 
+  (** A Client's side type for a broadcaster *)
   type t = broadcaster Js.t
 
+  (** Creates a bus with a name *)
   val create: string -> t
+
+  (** Closes a Bus  *)
   val close: t -> unit
+
+  (** Retreives the name of a bus *)
   val name: t-> string
+
+  (** Send message to the bus  *)
   val post: t -> message -> unit
 
 end
