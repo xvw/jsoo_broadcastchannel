@@ -78,10 +78,13 @@ sig
   type t = broadcaster Js.t
 
 
-  (** Creates a bus with a name *)
+  (** Creates a bus linked to a name *)
   val create: string -> t
 
-  (** Closes a Bus  *)
+  (** Closes the channel object, indicating 
+      it won't get any new messages, and allowing it to be, 
+      eventually, garbage collected. 
+  *)
   val close: t -> unit
 
   (** Retreives the name of a bus *)
@@ -90,6 +93,9 @@ sig
   (** Send message to the bus  *)
   val post: t -> message -> unit
 
+  (** Is an EventHandler property that specifies the function to execute when a 
+      message event is fired on this object. 
+  *)
   val onmessage: t -> (message messageEvent Js.t -> bool Js.t) -> unit
 
 end
