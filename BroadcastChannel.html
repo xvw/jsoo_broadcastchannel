@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="BroadcastChannel" rel="Chapter" href="BroadcastChannel.html"><link title="Exceptions and types" rel="Section" href="#1_Exceptionsandtypes">
+<link title="Common functions" rel="Section" href="#1_Commonfunctions">
+<link title="Event support" rel="Section" href="#1_Eventsupport">
+<title>BroadcastChannel</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_BroadcastChannel.html">BroadcastChannel</a></h1>
+
+<pre><span class="keyword">module</span> BroadcastChannel: <code class="code"><span class="keyword">sig</span></code> <a href="BroadcastChannel.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+<code class="code">jsoo_broadcastchannel</code> provides a wrapper around the BroadcastChannel API 
+    in JavaScript. 
+    The BroadcastChannel interface represents a named channel that any browsing context 
+    of a given origin can subscribe to. It allows communication between different documents 
+    (in different windows, tabs, frames or iframes) of the same origin. Messages are 
+    broadcasted via a message event fired at all BroadcastChannel objects listening 
+    to the channel.
+<p>
+
+    Example of use : 
+<p>
+
+    Creating a channel an post message (on a first file)  : 
+<p>
+
+    <pre class="codepre"><code class="code">      <span class="keyword">let</span> channel = <span class="constructor">BroadcastChannel</span>.create <span class="string">"my_first_channel"</span>
+      <span class="keyword">let</span> _ = <span class="constructor">BroadcastChannel</span>.post channel (<span class="constructor">Js</span>.string <span class="string">"Hello World"</span>)
+    </code></pre>
+<p>
+
+    Receiving message from the channel <code class="code">my_first_channel</code> on an another file 
+    with <code class="code">onmessage</code> function :
+<p>
+
+    <pre class="codepre"><code class="code">      <span class="comment">(* Retreive the channel *)</span>
+      <span class="keyword">let</span> channel : <span class="constructor">Js</span>.string <span class="constructor">Js</span>.t <span class="constructor">BroadcastChannel</span>.t = 
+        <span class="constructor">BroadcastChannel</span>.create <span class="string">"my_first_channel"</span>
+      <span class="comment">(* You have to fix the type of the channel, you can also use [BroadcastChannel.create_with] *)</span>
+
+      <span class="keyword">let</span> _ = 
+        <span class="constructor">BroadcastChannel</span>.on
+          channel 
+          (<span class="keyword">fun</span> ev <span class="keywordsign">-&gt;</span> 
+            <span class="comment">(* Use the ev object *)</span>
+            <span class="constructor">Js</span>._true
+          )
+    </code></pre>
+<p>
+
+    Receiving message from the channel <code class="code">my_first_channel</code> on an another file 
+    with <code class="code">addEventListener</code> function :
+<p>
+
+    <pre class="codepre"><code class="code">      <span class="comment">(* Retreive the channel *)</span>
+      <span class="keyword">let</span> channel : <span class="constructor">Js</span>.string <span class="constructor">Js</span>.t <span class="constructor">BroadcastChannel</span>.t = 
+          <span class="constructor">BroadcastChannel</span>.create <span class="string">"my_first_channel"</span>
+      <span class="comment">(* You have to fix the type of the channel, you can also use [BroadcastChannel.create_with] *)</span>
+
+      <span class="keyword">let</span> _ = 
+        <span class="constructor">BroadcastChannel</span>.addEventListener
+          channel
+          (<span class="constructor">BroadcastChannel</span>.message channel)
+          (<span class="constructor">Dom</span>.handler (<span class="keyword">fun</span> ev <span class="keywordsign">-&gt;</span> ... <span class="constructor">Js</span>._true))
+          <span class="constructor">Js</span>._true
+    </code></pre>
+<p>
+
+    Or you can use <code class="code"><span class="constructor">BroadcastChannel</span>.create_with</code> (for a more conveinent usage)
+<p>
+
+    <pre class="codepre"><code class="code">      <span class="comment">(* Retreive the channel *)</span>
+      <span class="keyword">let</span> (channel, message_event) = 
+        <span class="constructor">BroadcastChannel</span>.create_with 
+          <span class="string">"my_first_channel"</span>
+          (<span class="constructor">Js</span>.string <span class="string">"a sample"</span>)
+
+      <span class="keyword">let</span> _ = 
+        <span class="constructor">BroadcastChannel</span>.addEventListener
+          channel
+          message_event
+          (<span class="constructor">Dom</span>.handler (<span class="keyword">fun</span> ev <span class="keywordsign">-&gt;</span> ... <span class="constructor">Js</span>._true))
+          <span class="constructor">Js</span>._true
+    </code></pre>
+<p>
+
+    Receiving message from the channel <code class="code">my_first_channel</code> on an another file 
+    with <code class="code"><span class="constructor">Lwt_js_events</span></code> :
+<p>
+
+    <pre class="codepre"><code class="code">      <span class="comment">(* Retreive the channel *)</span>
+      <span class="keyword">let</span> channel : <span class="constructor">Js</span>.string <span class="constructor">Js</span>.t <span class="constructor">BroadcastChannel</span>.t = 
+        <span class="constructor">BroadcastChannel</span>.create <span class="string">"my_first_channel"</span>
+
+      <span class="keyword">let</span> _ = 
+        <span class="constructor">Lwt_js_events</span>.async_loop 
+          <span class="constructor">BroadcastChannel</span>.lwt_js_message
+          channel
+          (<span class="keyword">fun</span> ev _ <span class="keywordsign">-&gt;</span> 
+            ... 
+            <span class="constructor">Lwt</span>.return_unit
+          )
+    </code></pre><br>
+<b>See also</b> <a href="https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel">The BroadcastChannel API</a><br>
+</div>
+<hr width="100%">
+<br>
+<h1 id="1_Exceptionsandtypes">Exceptions and types</h1><br>
+
+<pre><span id="EXCEPTIONNot_supported"><span class="keyword">exception</span> Not_supported</span></pre>
+<div class="info ">
+Exception if BroadcastChannel is not supported<br>
+</div>
+
+<pre><span id="TYPEmessageEvent"><span class="keyword">class type</span> <code class="type">['message]</code> <a href="BroadcastChannel.messageEvent-c.html">messageEvent</a></span> = <code class="type">['message]</code> <code class="type">EventSource.messageEvent</code></pre><div class="info">
+Class type to define a messageEvent
+</div>
+
+<pre><span id="TYPEmessage"><span class="keyword">type</span> <code class="type">'a</code> message</span> = <code class="type">'a <a href="BroadcastChannel.messageEvent-c.html">messageEvent</a> Js.t</code> </pre>
+<div class="info ">
+Shortcut for a messageEvent<br>
+</div>
+
+
+<pre><span id="TYPEbroadcaster"><span class="keyword">class type</span> <code class="type">['message]</code> <a href="BroadcastChannel.broadcaster-c.html">broadcaster</a></span> = <code class="code"><span class="keyword">object</span></code> <a href="BroadcastChannel.broadcaster-c.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+Interface of a BroadcastChannel
+</div>
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type">'a</code> t</span> = <code class="type">'a <a href="BroadcastChannel.broadcaster-c.html">broadcaster</a> Js.t</code> </pre>
+<div class="info ">
+Shortcut for a broadcaster<br>
+</div>
+
+<br>
+<h1 id="1_Commonfunctions">Common functions</h1><br>
+
+<pre><span id="VALis_supported"><span class="keyword">val</span> is_supported</span> : <code class="type">unit -> bool</code></pre><div class="info ">
+Returns <code class="code"><span class="keyword">true</span></code> if BroadcastChannel is supported by the 
+    client's browser, false otherwise.<br>
+</div>
+
+<pre><span id="VALcreate"><span class="keyword">val</span> create</span> : <code class="type">string -> 'message <a href="BroadcastChannel.html#TYPEt">t</a></code></pre><div class="info ">
+Creates a BroadcastChannel with a name. Raise <code class="code"><span class="constructor">Not_supported</span>&nbsp;<span class="string">"BroadcastChannel"</span></code> 
+    if BroadcastChannel is not supported by the client's browser.<br>
+</div>
+
+<pre><span id="VALcreate_with"><span class="keyword">val</span> create_with</span> : <code class="type">string -><br>       'a -> 'a <a href="BroadcastChannel.html#TYPEt">t</a> * 'a <a href="BroadcastChannel.html#TYPEmessage">message</a> Dom.Event.typ</code></pre><div class="info ">
+Creates a BroadcastChannel with a name. Raise <code class="code"><span class="constructor">Not_supported</span>&nbsp;<span class="string">"BroadcastChannel"</span></code> 
+    if BroadcastChannel is not supported by the client's browser.
+    The functions takes a "sample of a message" to fix the types of the broadcaster. 
+    The functions returns a couple of the BroadcastChannel and the <code class="code"><span class="constructor">Event</span></code> (to be used)
+    in <code class="code">addEventListener</code>.<br>
+</div>
+
+<pre><span id="VALclose"><span class="keyword">val</span> close</span> : <code class="type">'message <a href="BroadcastChannel.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Closes the channel object, indicating it won't get any new messages, 
+    and allowing it to be, eventually, garbage collected.<br>
+</div>
+
+<pre><span id="VALname"><span class="keyword">val</span> name</span> : <code class="type">'message <a href="BroadcastChannel.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+Returns a <code class="code">string</code>, the name of the channel.<br>
+</div>
+
+<pre><span id="VALpost"><span class="keyword">val</span> post</span> : <code class="type">'message <a href="BroadcastChannel.html#TYPEt">t</a> -> 'message -> unit</code></pre><div class="info ">
+Sends the message, of the broadcaster type to each BroadcastChannel 
+    object listening to the same channel.<br>
+</div>
+
+<pre><span id="VALon"><span class="keyword">val</span> on</span> : <code class="type">'message <a href="BroadcastChannel.html#TYPEt">t</a> -><br>       ('message <a href="BroadcastChannel.html#TYPEmessage">message</a> -> bool Js.t) -> unit</code></pre><div class="info ">
+Is an <code class="code"><span class="constructor">EventHandler</span></code> property that specifies the function to execute
+    when a message event is fired on this object.<br>
+</div>
+<br>
+<h1 id="1_Eventsupport">Event support</h1><br>
+
+<pre><span id="VALaddEventListener"><span class="keyword">val</span> addEventListener</span> : <code class="type">'a <a href="BroadcastChannel.html#TYPEt">t</a> -><br>       'a <a href="BroadcastChannel.html#TYPEmessage">message</a> Dom.Event.typ -><br>       ('a <a href="BroadcastChannel.html#TYPEt">t</a>, 'a <a href="BroadcastChannel.html#TYPEmessage">message</a>) Dom.event_listener -><br>       bool Js.t -> Dom.event_listener_id</code></pre><div class="info ">
+Add an event listener. This function matches the <code class="code">addEventListener</code> 
+    DOM method, except that it returns an id for removing the listener.<br>
+</div>
+
+<pre><span id="VALmessage"><span class="keyword">val</span> message</span> : <code class="type">'a <a href="BroadcastChannel.html#TYPEt">t</a> -> 'a <a href="BroadcastChannel.html#TYPEmessage">message</a> Dom.Event.typ</code></pre><div class="info ">
+An event to be used with <code class="code">addEventListener</code><br>
+</div>
+
+<pre><span id="VALlwt_js_message"><span class="keyword">val</span> lwt_js_message</span> : <code class="type">?use_capture:bool -><br>       'a <a href="BroadcastChannel.html#TYPEt">t</a> -> 'a <a href="BroadcastChannel.messageEvent-c.html">messageEvent</a> Js.t Lwt.t</code></pre><div class="info ">
+An event to be used with <code class="code"><span class="constructor">Lwt_js_events</span></code><br>
+</div>
+</body></html>
