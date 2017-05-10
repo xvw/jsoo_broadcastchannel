@@ -68,7 +68,12 @@ let on bus f =
 let addEventListener = 
   Dom.addEventListener
 
+let message _ = 
+  Dom.Event.make "message"
 
+let create_with name _ =
+  let bus = create name in 
+  (bus, message bus)
 
 
 module Old =

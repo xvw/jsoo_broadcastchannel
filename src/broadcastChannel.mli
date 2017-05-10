@@ -61,6 +61,7 @@ type 'a t = 'a broadcaster Js.t
 
 val is_supported : unit -> bool
 val create: string -> 'message t
+val create_with: string -> 'a -> ('a t * 'a message Dom.Event.typ)
 val close:  'message t -> unit
 val name:   'message t -> string
 val post:   'message t -> 'message -> unit
@@ -72,6 +73,8 @@ val addEventListener :
   -> ('a t, 'a message) Dom.event_listener
   -> bool Js.t 
   -> Dom.event_listener_id
+
+val message : 'a t -> 'a message Dom.Event.typ
 
  module Old : 
  sig
