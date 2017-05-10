@@ -23,9 +23,6 @@
 
 exception Not_supported of string
 
-type ('a, 'b) listener = 
-  ('a, 'b) Dom_html.event_listener
-
 class type ['message] messageEvent =
 object 
   inherit ['message] EventSource.messageEvent
@@ -40,7 +37,7 @@ object ('self)
   method close : unit -> unit Js.meth
   method postMessage :  'message -> unit Js.meth
   method onmessage: 
-    ('self Js.t, 'message message) listener Js.writeonly_prop
+    ('self Js.t, 'message message) Dom_html.event_listener Js.writeonly_prop
 end
 
 type 'a t = 'a broadcaster Js.t

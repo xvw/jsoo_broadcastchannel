@@ -33,18 +33,21 @@
  *)
 
 
+(** {1 Exceptions and types} *)
+
+(** Exception if BroadcastChannel is not supported *)
 exception Not_supported of string
 
-type ('a, 'b) listener = 
-  ('a, 'b) Dom_html.event_listener
-
+(** Class type to define a messageEvent *)
 class type ['message] messageEvent =
 object 
   inherit ['message] EventSource.messageEvent
 end
 
+(** Shortcut for a messageEvent *)
 type 'a message = 'a messageEvent Js.t
 
+(** Interface of a BroadcastChannel *)
 class type ['message] broadcaster = 
 object ('self)
   inherit Dom_html.eventTarget
@@ -52,10 +55,13 @@ object ('self)
   method close : unit -> unit Js.meth
   method postMessage :  'message -> unit Js.meth
   method onmessage: 
-    ('self Js.t, 'message message) listener Js.writeonly_prop
+    ('self Js.t, 'message message) Dom_html.event_listener Js.writeonly_prop
 end
 
+(** Shortcut for a broadcaster *)
 type 'a t = 'a broadcaster Js.t
+
+(** {1 Common functions} *)
 
 val is_supported : unit -> bool
 val create: string -> 'message t
@@ -64,6 +70,9 @@ val close:  'message t -> unit
 val name:   'message t -> string
 val post:   'message t -> 'message -> unit
 val on:     'message t -> ('message message -> bool Js.t) -> unit
+
+
+(** {1 Event support} *)
 
 val addEventListener : 
   'a t
