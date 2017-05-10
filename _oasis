@@ -1,5 +1,5 @@
 Name: jsoo_broadcastchannel
-Version: 1.0
+Version: 1.1
 Synopsis: A Js_of_OCaml extension to use BroadcastChannel
 Description: Allow a proper way to have a communication bus between window of the same origin
 Authors: Xavier Van de Woestyne <xaviervdw@gmail.com>

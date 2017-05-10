@@ -1,6 +1,6 @@
 opam-version: "1.2"
 name: "jsoo_broadcastchannel"
-version: "1.0"
+version: "1.1"
 maintainer: "xvw <xavier.vdw@gmail.com>"
 authors: "xvw <xavier.vdw@gmail.com>"
 homepage: "https://github.com/xvw/jsoo_broadcastchannel"
