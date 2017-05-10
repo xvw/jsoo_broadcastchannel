@@ -34,93 +34,125 @@
     The module provides a functor's way to manage typed bus.
  *)
 
+exception Not_supported of string
 
-(** {1 Common API} *)
+type ('a, 'b) listener = 
+  ('a, 'b) Dom_html.event_listener
 
-(** The type of a messageEvent (could be extended) *)
-class type ['a] messageEvent =
-  object 
-    inherit ['a] EventSource.messageEvent
-  end
+class type ['message] messageEvent =
+object 
+  inherit ['message] EventSource.messageEvent
+end
 
-(** Checks if the BroadcastChannel is available for the client *)
+class type ['message] broadcaster = 
+object ('self)
+  inherit Dom_html.eventTarget
+  method name  : (Js.js_string Js.t) Js.readonly_prop
+  method close : unit -> unit Js.meth
+  method postMessage :  'message -> unit Js.meth
+  method onmessage: 
+    ('self Js.t, 'message messageEvent Js.t) listener Js.writeonly_prop
+end
+
 val is_supported : unit -> bool
+val create: string -> 'message broadcaster Js.t
+val close: 'message broadcaster Js.t -> unit
+val name: 'message broadcaster Js.t -> string
+val post: 'message broadcaster Js.t -> 'message -> unit
+val on: 'message broadcaster Js.t -> ('message messageEvent Js.t -> bool Js.t) -> unit
 
-(** {1 Functors and interfaces} *)
-
-(** A Required interfaces to built a BroadCaster *)
-module type REQUIRED = 
-sig 
-
-  (** The type of the bus *)
-  type message
-end
+ module Old : 
+ sig
 
 
-(** The interface of a broadcaster *)
-module type BROADCASTER = 
-sig
+  (** {1 Common API} *)
 
-  include REQUIRED
+  (** The type of a messageEvent (could be extended) *)
+  class type ['a] messageEvent =
+    object 
+      inherit ['a] EventSource.messageEvent
+    end
 
-  (** An internal wrapper for an instance of BroadcastChannel *)
-  class type broadcaster = 
-  object ('self)
-    inherit Dom_html.eventTarget
-    method name  : (Js.js_string Js.t) Js.readonly_prop
-    method close : unit -> unit Js.meth
-    method postMessage :  message -> unit Js.meth
-    method onmessage: 
-      ('self Js.t, message messageEvent Js.t) Dom_html.event_listener Js.writeonly_prop
-  end
+  (** Checks if the BroadcastChannel is available for the client *)
+  val is_supported : unit -> bool
 
-  (** A Client's side type for a broadcaster *)
-  type t = broadcaster Js.t
+  (** {1 Functors and interfaces} *)
 
-  (** Internal events for a typed bus  *)
-  module Event : 
+  (** A Required interfaces to built a BroadCaster *)
+  module type REQUIRED = 
   sig 
-    (** An [Event type] to be used with [addEventListener] *)
-    val message :  message messageEvent Js.t Dom.Event.typ
 
-    (** An [Event type] to be used with [Lwt_js_events] *)
-    val lwt_js_message: 
-      ?use_capture:bool
-      -> t 
-      -> message messageEvent Js.t Lwt.t
+    (** The type of the bus *)
+    type message
   end
 
 
-  (** Creates a bus linked to a name *)
-  val create: string -> t
+  (** The interface of a broadcaster *)
+  module type BROADCASTER = 
+  sig
 
-  (** Closes the channel object, indicating 
-      it won't get any new messages, and allowing it to be, 
-      eventually, garbage collected. 
-  *)
-  val close: t -> unit
+    include REQUIRED
 
-  (** Retreives the name of a bus *)
-  val name: t-> string
+    (** An internal wrapper for an instance of BroadcastChannel *)
+    class type broadcaster = 
+    object ('self)
+      inherit Dom_html.eventTarget
+      method name  : (Js.js_string Js.t) Js.readonly_prop
+      method close : unit -> unit Js.meth
+      method postMessage :  message -> unit Js.meth
+      method onmessage: 
+        ('self Js.t, message messageEvent Js.t) Dom_html.event_listener Js.writeonly_prop
+    end
 
-  (** Send message to the bus  *)
-  val post: t -> message -> unit
+    (** A Client's side type for a broadcaster *)
+    type t = broadcaster Js.t
 
-  (** Is an EventHandler property that specifies the function to execute when a 
-      message event is fired on this object. 
-  *)
-  val onmessage: t -> (message messageEvent Js.t -> bool Js.t) -> unit
+    (** Internal events for a typed bus  *)
+    module Event : 
+    sig 
+      (** An [Event type] to be used with [addEventListener] *)
+      val message :  message messageEvent Js.t Dom.Event.typ
+
+      (** An [Event type] to be used with [Lwt_js_events] *)
+      val lwt_js_message: 
+        ?use_capture:bool
+        -> t 
+        -> message messageEvent Js.t Lwt.t
+    end
 
 
-  val addEventListener : 
-    t
-    -> message messageEvent Js.t Dom.Event.typ
-    -> (t, message messageEvent Js.t) Dom.event_listener
-    -> bool Js.t 
-    -> Dom.event_listener_id
+    (** Creates a bus linked to a name *)
+    val create: string -> t
+
+    (** Closes the channel object, indicating 
+        it won't get any new messages, and allowing it to be, 
+        eventually, garbage collected. 
+    *)
+    val close: t -> unit
+
+    (** Retreives the name of a bus *)
+    val name: t-> string
+
+    (** Send message to the bus  *)
+    val post: t -> message -> unit
+
+    (** Is an EventHandler property that specifies the function to execute when a 
+        message event is fired on this object. 
+    *)
+    val onmessage: t -> (message messageEvent Js.t -> bool Js.t) -> unit
+
+
+    val addEventListener : 
+      t
+      -> message messageEvent Js.t Dom.Event.typ
+      -> (t, message messageEvent Js.t) Dom.event_listener
+      -> bool Js.t 
+      -> Dom.event_listener_id
+
+  end
+
+  (** Functor to built a typed broadcaster *)
+  module Make (B : REQUIRED ) : BROADCASTER 
+    with type message = B.message
 
 end
-
-(** Functor to built a typed broadcaster *)
-module Make (B : REQUIRED ) : BROADCASTER 
-  with type message = B.message
