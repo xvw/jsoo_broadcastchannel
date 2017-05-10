@@ -1,5 +1,5 @@
-_build/*
-api.docdir/*
-example/*
+_build
+example
 setup.data
-setup.log
+setup.log 
+api.docdir
