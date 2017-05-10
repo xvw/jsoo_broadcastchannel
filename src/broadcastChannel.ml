@@ -21,7 +21,7 @@
  * SOFTWARE.
  *)
 
-exception Not_supported of string
+exception Not_supported
 
 class type ['message] messageEvent =
 object 
@@ -48,7 +48,7 @@ let is_supported () = Js.Optdef.test constr
 let create name = 
   if is_supported () 
   then new%js constr (Js.string name)
-  else raise (Not_supported "BroadcastChannel")
+  else raise Not_supported
 
 let close bus = 
   ignore (bus ## close())

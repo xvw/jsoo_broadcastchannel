@@ -36,7 +36,7 @@
 (** {1 Exceptions and types} *)
 
 (** Exception if BroadcastChannel is not supported *)
-exception Not_supported of string
+exception Not_supported
 
 (** Class type to define a messageEvent *)
 class type ['message] messageEvent =
@@ -63,17 +63,49 @@ type 'a t = 'a broadcaster Js.t
 
 (** {1 Common functions} *)
 
+(** Returns [true] if BroadcastChannel is supported by the 
+    client's browser, false otherwise.
+  *)
 val is_supported : unit -> bool
+
+(** Creates a BroadcastChannel with a name. Raise [Not_supported "BroadcastChannel"] 
+    if BroadcastChannel is not supported by the client's browser.
+*)
 val create: string -> 'message t
+
+(** Creates a BroadcastChannel with a name. Raise [Not_supported "BroadcastChannel"] 
+    if BroadcastChannel is not supported by the client's browser.
+    The functions takes a "sample of a message" to fix the types of the broadcaster. 
+    The functions returns a couple of the BroadcastChannel and the [Event] (to be used)
+    in [addEventListener].
+*)
 val create_with: string -> 'a -> ('a t * 'a message Dom.Event.typ)
+
+
+(** Closes the channel object, indicating it won't get any new messages, 
+    and allowing it to be, eventually, garbage collected. 
+*)
 val close:  'message t -> unit
+
+(** Returns a [string], the name of the channel. *)
 val name:   'message t -> string
+
+(** Sends the message, of the broadcaster type to each BroadcastChannel 
+    object listening to the same channel. 
+*)
 val post:   'message t -> 'message -> unit
+
+(** Is an [EventHandler] property that specifies the function to execute
+    when a message event is fired on this object.
+*)
 val on:     'message t -> ('message message -> bool Js.t) -> unit
 
 
 (** {1 Event support} *)
 
+(** Add an event listener. This function matches the [addEventListener] 
+    DOM method, except that it returns an id for removing the listener. 
+*)
 val addEventListener : 
   'a t
   -> 'a message Dom.Event.typ
@@ -81,8 +113,10 @@ val addEventListener :
   -> bool Js.t 
   -> Dom.event_listener_id
 
+(** An event to be used with [addEventListener] *)
 val message : 'a t -> 'a message Dom.Event.typ
 
+(** An event to be used with [Lwt_js_events] *)
 val lwt_js_message: 
   ?use_capture:bool 
   -> 'a t 
