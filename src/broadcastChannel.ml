@@ -71,6 +71,19 @@ let addEventListener =
 let message _ = 
   Dom.Event.make "message"
 
+let lwt_js_message ?(use_capture = false) target = 
+  let el = ref Js.null in
+  let t, w = Lwt.task () in
+  let cancel () = Js.Opt.iter !el Dom.removeEventListener in
+  Lwt.on_cancel t cancel;
+  el := Js.some
+    (Dom.addEventListener
+      target (message target)
+      (Dom.handler (fun ev -> cancel (); Lwt.wakeup w ev; Js.bool true))
+      (Js.bool use_capture)
+    );
+  t
+
 let create_with name _ =
   let bus = create name in 
   (bus, message bus)

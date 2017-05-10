@@ -76,6 +76,11 @@ val addEventListener :
 
 val message : 'a t -> 'a message Dom.Event.typ
 
+val lwt_js_message: 
+  ?use_capture:bool 
+  -> 'a t 
+  -> ('a messageEvent) Js.t Lwt.t
+
  module Old : 
  sig
 
