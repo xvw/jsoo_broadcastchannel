@@ -9,11 +9,15 @@
 [Reference](https://developer.mozilla.org/fr/docs/Web/API/BroadcastChannel)
 
 
+**Jsoo_broadcastchannel** is a binding for the [BroadcastChannel Api](https://developer.mozilla.org/fr/docs/Web/API/BroadcastChannel). 
+
+
+
+## Special thanks
+I would like to sincerely thank @drup for his advice on the implementation 
+and the design of the API !
+
+## Sample 
 
 ![An example (see the `example` directory)](http://full.ouplo.com/11/13/4MWF.gif)
-
-
-
-
-**Jsoo_broadcastchannel** is a binding for the [BroadcastChannel Api](https://developer.mozilla.org/fr/docs/Web/API/BroadcastChannel). 
 

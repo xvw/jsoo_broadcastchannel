@@ -29,7 +29,88 @@
     broadcasted via a message event fired at all BroadcastChannel objects listening 
     to the channel.
 
-    You can have more details here : https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel
+    Example of use : 
+
+    Creating a channel an post message (on a first file)  : 
+
+    {[
+      let channel = BroadcastChannel.create "my_first_channel"
+      let _ = BroadcastChannel.post channel (Js.string "Hello World")
+    ]}
+
+    Receiving message from the channel [my_first_channel] on an another file 
+    with [onmessage] function :
+
+    {[
+      (* Retreive the channel *)
+      let channel : Js.string Js.t BroadcastChannel.t = 
+        BroadcastChannel.create "my_first_channel"
+      (* You have to fix the type of the channel, you can also use [BroadcastChannel.create_with] *)
+
+      let _ = 
+        BroadcastChannel.on
+          channel 
+          (fun ev -> 
+            (* Use the ev object *)
+            Js._true
+          )
+    ]}
+
+    Receiving message from the channel [my_first_channel] on an another file 
+    with [addEventListener] function :
+
+    {[
+      (* Retreive the channel *)
+      let channel : Js.string Js.t BroadcastChannel.t = 
+          BroadcastChannel.create "my_first_channel"
+      (* You have to fix the type of the channel, you can also use [BroadcastChannel.create_with] *)
+
+      let _ = 
+        BroadcastChannel.addEventListener
+          channel
+          (BroadcastChannel.message channel)
+          (Dom.handler (fun ev -> ... Js._true))
+          Js._true
+    ]}
+
+    Or you can use [BroadcastChannel.create_with] (for a more conveinent usage)
+
+    {[
+      (* Retreive the channel *)
+      let (channel, message_event) = 
+        BroadcastChannel.create_with 
+          "my_first_channel"
+          (Js.string "a sample")
+
+      let _ = 
+        BroadcastChannel.addEventListener
+          channel
+          message_event
+          (Dom.handler (fun ev -> ... Js._true))
+          Js._true
+    ]}
+
+    Receiving message from the channel [my_first_channel] on an another file 
+    with [Lwt_js_events] :
+
+    {[
+      (* Retreive the channel *)
+      let channel : Js.string Js.t BroadcastChannel.t = 
+        BroadcastChannel.create "my_first_channel"
+
+      let _ = 
+        Lwt_js_events.async_loop 
+          BroadcastChannel.lwt_js_message
+          channel
+          (fun ev _ -> 
+            ... 
+            Lwt.return_unit
+          )
+    ]}
+
+
+    @see <https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel>
+    The BroadcastChannel API
  *)
 
 
@@ -38,10 +119,13 @@
 (** Exception if BroadcastChannel is not supported *)
 exception Not_supported
 
-(** Class type to define a messageEvent *)
+(** Class type to define a messageEvent 
+    @see <http://ocsigen.org/js_of_ocaml/2.8.4/api/EventSource.messageEvent-c>
+    The EventSource of Js_of_OCaml API
+*)
 class type ['message] messageEvent = 
   ['message] EventSource.messageEvent
-  
+
 (** Shortcut for a messageEvent *)
 type 'a message = 'a messageEvent Js.t
 
