@@ -31,6 +31,8 @@ object
   inherit ['message] EventSource.messageEvent
 end
 
+type 'a message = 'a messageEvent Js.t
+
 class type ['message] broadcaster = 
 object ('self)
   inherit Dom_html.eventTarget
@@ -38,8 +40,10 @@ object ('self)
   method close : unit -> unit Js.meth
   method postMessage :  'message -> unit Js.meth
   method onmessage: 
-    ('self Js.t, 'message messageEvent Js.t) listener Js.writeonly_prop
+    ('self Js.t, 'message message) listener Js.writeonly_prop
 end
+
+type 'a t = 'a broadcaster Js.t
 
 let constr = Js.Unsafe.global##._BroadcastChannel
 let is_supported () = Js.Optdef.test constr
@@ -60,6 +64,9 @@ let post bus message =
 
 let on bus f = 
   bus##.onmessage := (Dom.handler f)
+
+let addEventListener = 
+  Dom.addEventListener
 
 
 

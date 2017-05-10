@@ -40,8 +40,3 @@ let text_in element data =
   let _ = remove_children element in 
   let _ =  Dom.appendChild element x in ()
 
-
-module StringBus = BroadcastChannel.Make(
-  struct type message = Js.js_string Js.t end
-)
-

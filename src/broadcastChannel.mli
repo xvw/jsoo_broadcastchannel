@@ -34,6 +34,7 @@
     The module provides a functor's way to manage typed bus.
  *)
 
+
 exception Not_supported of string
 
 type ('a, 'b) listener = 
@@ -44,6 +45,8 @@ object
   inherit ['message] EventSource.messageEvent
 end
 
+type 'a message = 'a messageEvent Js.t
+
 class type ['message] broadcaster = 
 object ('self)
   inherit Dom_html.eventTarget
@@ -51,15 +54,24 @@ object ('self)
   method close : unit -> unit Js.meth
   method postMessage :  'message -> unit Js.meth
   method onmessage: 
-    ('self Js.t, 'message messageEvent Js.t) listener Js.writeonly_prop
+    ('self Js.t, 'message message) listener Js.writeonly_prop
 end
 
+type 'a t = 'a broadcaster Js.t
+
 val is_supported : unit -> bool
-val create: string -> 'message broadcaster Js.t
-val close: 'message broadcaster Js.t -> unit
-val name: 'message broadcaster Js.t -> string
-val post: 'message broadcaster Js.t -> 'message -> unit
-val on: 'message broadcaster Js.t -> ('message messageEvent Js.t -> bool Js.t) -> unit
+val create: string -> 'message t
+val close:  'message t -> unit
+val name:   'message t -> string
+val post:   'message t -> 'message -> unit
+val on:     'message t -> ('message message -> bool Js.t) -> unit
+
+val addEventListener : 
+  'a t
+  -> 'a message Dom.Event.typ
+  -> ('a t, 'a message) Dom.event_listener
+  -> bool Js.t 
+  -> Dom.event_listener_id
 
  module Old : 
  sig
