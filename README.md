@@ -11,7 +11,7 @@
 
 **Jsoo_broadcastchannel** is a binding for the [BroadcastChannel Api](https://developer.mozilla.org/fr/docs/Web/API/BroadcastChannel). 
 
-##Example of use
+## Example of use
 
 ### Creating a channel an post message (on a first file)  : 
 
@@ -20,7 +20,7 @@ let channel = BroadcastChannel.create "my_first_channel"
 let _ = BroadcastChannel.post channel (Js.string "Hello World")
 ```
 
-###Receiving message from the channel `my_first_channel` on an another file with `onmessage`
+### Receiving message from the channel `my_first_channel` on an another file with `onmessage`
 
 ```ocaml
 (* Retreive the channel *)
@@ -37,7 +37,7 @@ let _ =
     )
 ```
 
-###Receiving message from the channel `my_first_channel` on an another file with `addEventListener`
+### Receiving message from the channel `my_first_channel` on an another file with `addEventListener`
 
 ```ocaml
 (* Retreive the channel *)
