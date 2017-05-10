@@ -39,11 +39,9 @@
 exception Not_supported
 
 (** Class type to define a messageEvent *)
-class type ['message] messageEvent =
-object 
-  inherit ['message] EventSource.messageEvent
-end
-
+class type ['message] messageEvent = 
+  ['message] EventSource.messageEvent
+  
 (** Shortcut for a messageEvent *)
 type 'a message = 'a messageEvent Js.t
 

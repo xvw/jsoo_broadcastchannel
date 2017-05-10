@@ -23,10 +23,8 @@
 
 exception Not_supported
 
-class type ['message] messageEvent =
-object 
-  inherit ['message] EventSource.messageEvent
-end
+class type ['message] messageEvent = 
+  ['message] EventSource.messageEvent
 
 type 'a message = 'a messageEvent Js.t
 
