@@ -20,7 +20,7 @@ let channel = BroadcastChannel.create "my_first_channel"
 let _ = BroadcastChannel.post channel (Js.string "Hello World")
 ```
 
-### Receiving message from the channel `my_first_channel` on an another file with `onmessage`
+### Receiving message from the channel `my_first_channel` on another file with `onmessage`
 
 ```ocaml
 (* Retreive the channel *)
@@ -53,7 +53,7 @@ let _ =
     Js._true
 ```
 
-Or you can use `BroadcastChannel.create_with` (for a more conveinent usage, without type anotation)
+Or you can use `BroadcastChannel.create_with` (for a more convenient usage, without type annotation)
 
 ```ocaml
 (* Retreive the channel *)
