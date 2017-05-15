@@ -20,7 +20,8 @@ Library jsoo_broadcastchannel
   ByteOpt:        -g -w +a-4-40..42-44-45-48
   BuildDepends:
                  js_of_ocaml (>= 2.8.4),
-                 js_of_ocaml.ppx
+                 js_of_ocaml.ppx,
+                 lwt
 
 Document api
   Title:                Documentation and API reference for BroadcastChannel
