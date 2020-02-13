@@ -1,5 +1,7 @@
 (** Some boilerplate :'( *)
 
+open Js_of_ocaml
+
 let fail () = raise (Failure "unable to find data")
 let unopt x = Js.Opt.get x fail
 

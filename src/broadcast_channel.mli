@@ -116,6 +116,8 @@
 
 (** {1 Exceptions and types} *)
 
+open Js_of_ocaml
+
 (** Exception if BroadcastChannel is not supported *)
 exception Not_supported
 
@@ -200,6 +202,7 @@ val message : 'a t -> 'a message Dom.Event.typ
 
 (** An event to be used with [Lwt_js_events] *)
 val lwt_js_message: 
-  ?use_capture:bool 
+  ?use_capture:bool
+  -> ?passive:bool
   -> 'a t 
   -> ('a messageEvent) Js.t Lwt.t

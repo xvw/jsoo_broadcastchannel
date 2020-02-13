@@ -19,8 +19,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *)
+*)
 
+open Js_of_ocaml
 exception Not_supported
 
 class type ['message] messageEvent = 
@@ -29,14 +30,14 @@ class type ['message] messageEvent =
 type 'a message = 'a messageEvent Js.t
 
 class type ['message] broadcaster = 
-object ('self)
-  inherit Dom_html.eventTarget
-  method name  : (Js.js_string Js.t) Js.readonly_prop
-  method close : unit -> unit Js.meth
-  method postMessage :  'message -> unit Js.meth
-  method onmessage: 
-    ('self Js.t, 'message message) Dom_html.event_listener Js.writeonly_prop
-end
+  object ('self)
+    inherit Dom_html.eventTarget
+    method name  : (Js.js_string Js.t) Js.readonly_prop
+    method close : unit -> unit Js.meth
+    method postMessage :  'message -> unit Js.meth
+    method onmessage: 
+      ('self Js.t, 'message message) Dom_html.event_listener Js.writeonly_prop
+  end
 
 type 'a t = 'a broadcaster Js.t
 
@@ -66,17 +67,22 @@ let addEventListener =
 let message _ = 
   Dom.Event.make "message"
 
-let lwt_js_message ?(use_capture = false) target = 
+let lwt_js_message
+    ?(use_capture = false)
+    ?(passive = false)
+    target
+  = 
   let el = ref Js.null in
   let t, w = Lwt.task () in
   let cancel () = Js.Opt.iter !el Dom.removeEventListener in
   Lwt.on_cancel t cancel;
   el := Js.some
-    (Dom.addEventListener
-      target (message target)
-      (Dom.handler (fun ev -> cancel (); Lwt.wakeup w ev; Js.bool true))
-      (Js.bool use_capture)
-    );
+      (Dom.addEventListenerWithOptions
+         ~capture:(Js.bool use_capture)
+         ~passive:(Js.bool passive)
+         target (message target)
+         (Dom.handler (fun ev -> cancel (); Lwt.wakeup w ev; Js.bool true))
+      );
   t
 
 let create_with name _ =
