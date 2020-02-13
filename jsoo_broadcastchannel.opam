@@ -15,7 +15,7 @@ depends: [
   "js_of_ocaml" {>= "2.8.4"}
   "js_of_ocaml-ppx"
   "lwt"
-  "dune" {build}
+  "dune" {>= "1.11"}
 ]
 
 synopsis: "A wrapper in Js_of_ocaml to deal with BroadcastChannel"
