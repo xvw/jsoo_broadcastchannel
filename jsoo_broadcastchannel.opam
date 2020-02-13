@@ -6,7 +6,7 @@ authors: "xvw <xavier.vdw@gmail.com>"
 homepage: "https://github.com/xvw/jsoo_broadcastchannel"
 bug-reports: "https://github.com/xvw/jsoo_broadcastchannel/issues"
 license: "GPL3"
-dev-repo: "https://github.com/xvw/jsoo_broadcastchannel.git"
+dev-repo: "git://github.com/xvw/jsoo_broadcastchannel.git"
 
 build: [["dune" "build" "-p" name "-j" jobs]]
 
@@ -18,5 +18,5 @@ depends: [
   "dune" {build}
 ]
 
-description: "A wrapper in Js_of_ocaml to deal with BroadcastChannel."
-synopsis: "The BroadcastChannel interface represents a named channel that any browsing context of a given origin can subscribe to. It allows communication between different documents (in different windows, tabs, frames or iframes) of the same origin. Messages are broadcasted via a message event fired at all BroadcastChannel objects listening to the channel."
+synopsis: "A wrapper in Js_of_ocaml to deal with BroadcastChannel"
+description: "The BroadcastChannel interface represents a named channel that any browsing context of a given origin can subscribe to. It allows communication between different documents (in different windows, tabs, frames or iframes) of the same origin. Messages are broadcasted via a message event fired at all BroadcastChannel objects listening to the channel."
