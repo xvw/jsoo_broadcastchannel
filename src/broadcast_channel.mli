@@ -21,12 +21,12 @@
  * SOFTWARE.
  *)
 
-(** [jsoo_broadcastchannel] provides a wrapper around the BroadcastChannel API 
+(** [jsoo_broadcastchannel] provides a wrapper around the Broadcast_channel API 
     in JavaScript. 
-    The BroadcastChannel interface represents a named channel that any browsing context 
+    The Broadcast_channel interface represents a named channel that any browsing context 
     of a given origin can subscribe to. It allows communication between different documents 
     (in different windows, tabs, frames or iframes) of the same origin. Messages are 
-    broadcasted via a message event fired at all BroadcastChannel objects listening 
+    broadcasted via a message event fired at all Broadcast_channel objects listening 
     to the channel.
 
     Example of use : 
@@ -34,8 +34,8 @@
     Creating a channel an post message (on a first file)  : 
 
     {[
-      let channel = BroadcastChannel.create "my_first_channel"
-      let _ = BroadcastChannel.post channel (Js.string "Hello World")
+      let channel = Broadcast_channel.create "my_first_channel"
+      let _ = Broadcast_channel.post channel (Js.string "Hello World")
     ]}
 
     Receiving message from the channel [my_first_channel] on an another file 
@@ -43,12 +43,12 @@
 
     {[
       (* Retreive the channel *)
-      let channel : Js.string Js.t BroadcastChannel.t = 
-        BroadcastChannel.create "my_first_channel"
-      (* You have to fix the type of the channel, you can also use [BroadcastChannel.create_with] *)
+      let channel : Js.string Js.t Broadcast_channel.t = 
+        Broadcast_channel.create "my_first_channel"
+      (* You have to fix the type of the channel, you can also use [Broadcast_channel.create_with] *)
 
       let _ = 
-        BroadcastChannel.on
+        Broadcast_channel.on
           channel 
           (fun ev -> 
             (* Use the ev object *)
@@ -61,29 +61,29 @@
 
     {[
       (* Retreive the channel *)
-      let channel : Js.string Js.t BroadcastChannel.t = 
-          BroadcastChannel.create "my_first_channel"
-      (* You have to fix the type of the channel, you can also use [BroadcastChannel.create_with] *)
+      let channel : Js.string Js.t Broadcast_channel.t = 
+          Broadcast_channel.create "my_first_channel"
+      (* You have to fix the type of the channel, you can also use [Broadcast_channel.create_with] *)
 
       let _ = 
-        BroadcastChannel.addEventListener
+        Broadcast_channel.addEventListener
           channel
-          (BroadcastChannel.message channel)
+          (Broadcast_channel.message channel)
           (Dom.handler (fun ev -> ... Js._true))
           Js._true
     ]}
 
-    Or you can use [BroadcastChannel.create_with] (for a more conveinent usage)
+    Or you can use [Broadcast_channel.create_with] (for a more conveinent usage)
 
     {[
       (* Retreive the channel *)
       let (channel, message_event) = 
-        BroadcastChannel.create_with 
+        Broadcast_channel.create_with 
           "my_first_channel"
           (Js.string "a sample")
 
       let _ = 
-        BroadcastChannel.addEventListener
+        Broadcast_channel.addEventListener
           channel
           message_event
           (Dom.handler (fun ev -> ... Js._true))
@@ -95,12 +95,12 @@
 
     {[
       (* Retreive the channel *)
-      let channel : Js.string Js.t BroadcastChannel.t = 
-        BroadcastChannel.create "my_first_channel"
+      let channel : Js.string Js.t Broadcast_channel.t = 
+        Broadcast_channel.create "my_first_channel"
 
       let _ = 
         Lwt_js_events.async_loop 
-          BroadcastChannel.lwt_js_message
+          Broadcast_channel.lwt_js_message
           channel
           (fun ev _ -> 
             ... 
@@ -118,7 +118,7 @@
 
 open Js_of_ocaml
 
-(** Exception if BroadcastChannel is not supported *)
+(** Exception if Broadcast_channel is not supported *)
 exception Not_supported
 
 (** Class type to define a messageEvent 
@@ -131,7 +131,7 @@ class type ['message] messageEvent =
 (** Shortcut for a messageEvent *)
 type 'a message = 'a messageEvent Js.t
 
-(** Interface of a BroadcastChannel *)
+(** Interface of a Broadcast_channel *)
 class type ['message] broadcaster = 
 object ('self)
   inherit Dom_html.eventTarget
@@ -147,20 +147,20 @@ type 'a t = 'a broadcaster Js.t
 
 (** {1 Common functions} *)
 
-(** Returns [true] if BroadcastChannel is supported by the 
+(** Returns [true] if Broadcast_channel is supported by the 
     client's browser, false otherwise.
   *)
 val is_supported : unit -> bool
 
-(** Creates a BroadcastChannel with a name. Raise [Not_supported "BroadcastChannel"] 
-    if BroadcastChannel is not supported by the client's browser.
+(** Creates a Broadcast_channel with a name. Raise [Not_supported "Broadcast_channel"] 
+    if Broadcast_channel is not supported by the client's browser.
 *)
 val create: string -> 'message t
 
-(** Creates a BroadcastChannel with a name. Raise [Not_supported "BroadcastChannel"] 
-    if BroadcastChannel is not supported by the client's browser.
+(** Creates a Broadcast_channel with a name. Raise [Not_supported "Broadcast_channel"] 
+    if Broadcast_channel is not supported by the client's browser.
     The functions takes a "sample of a message" to fix the types of the broadcaster. 
-    The functions returns a couple of the BroadcastChannel and the [Event] (to be used)
+    The functions returns a couple of the Broadcast_channel and the [Event] (to be used)
     in [addEventListener].
 *)
 val create_with: string -> 'a -> ('a t * 'a message Dom.Event.typ)
@@ -174,7 +174,7 @@ val close:  'message t -> unit
 (** Returns a [string], the name of the channel. *)
 val name:   'message t -> string
 
-(** Sends the message, of the broadcaster type to each BroadcastChannel 
+(** Sends the message, of the broadcaster type to each Broadcast_channel 
     object listening to the same channel. 
 *)
 val post:   'message t -> 'message -> unit
